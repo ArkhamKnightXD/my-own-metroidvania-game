@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    float lastHorizontalAxis;
-
     float lastVerticalAxis;
 
     Animator animator;
@@ -22,7 +20,6 @@ public class PlayerController : MonoBehaviour
     
     float maxJumpingTime = 0.95f;
 
-    bool canJump;
 
     float horizontalAxis;
 
@@ -46,14 +43,6 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-        horizontalAxis = Input.GetAxis("Horizontal");
-
-        verticalAxis = Input.GetAxis("Vertical");
-
-
-        deltaPosition = new Vector3(horizontalAxis, 0) * speedX * Time.deltaTime;
-        
-        gameObject.transform.Translate(deltaPosition);
 
         Jump();
 
@@ -74,12 +63,18 @@ public class PlayerController : MonoBehaviour
 
     void PlayerMovementAnimation()
     {
-        if (lastHorizontalAxis != horizontalAxis)
-        {
-            lastHorizontalAxis = horizontalAxis;
 
-            animator.SetFloat("HorizontalAxis", lastHorizontalAxis);            
-        }
+        horizontalAxis = Input.GetAxis("Horizontal");
+
+        verticalAxis = Input.GetAxis("Vertical");
+
+        deltaPosition = new Vector3(horizontalAxis, 0) * speedX * Time.deltaTime;
+        
+        gameObject.transform.Translate(deltaPosition);
+        
+
+
+        animator.SetFloat("HorizontalAxis", Mathf.Abs(horizontalAxis));            
 
 
         if (lastVerticalAxis != verticalAxis)
@@ -96,19 +91,17 @@ public class PlayerController : MonoBehaviour
 
        characterScale = transform.localScale;
 
-        if (Input.GetKey("left"))
+       if (horizontalAxis < 0)
         {
             characterScale.x = -1;
-
         }
 
-        if (Input.GetKey("right"))
+        if (horizontalAxis > 0)
         {
             characterScale.x = 1;
-
         }
 
-        transform.localScale = characterScale;
+        transform.localScale =characterScale;
     }
 
 
